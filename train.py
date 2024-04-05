@@ -78,8 +78,8 @@ def train(FLAGS):
     # eval_recalls = []
 
     # Assuming we are using the CamVid Dataset
-    bc_train = 721 // batch_size
-    bc_eval = 206 // batch_size
+    bc_train = 486 // batch_size
+    bc_eval = 27 // batch_size
 
     pipe = loader(ip, lp, batch_size)
     eval_pipe = loader(ipv, lpv, batch_size)
@@ -119,7 +119,6 @@ def train(FLAGS):
 
             train_loss += loss.item()
 
-            """
             # Calculate training performance metrics
             train_accuracy = calculate_accuracy(out, mask_batch)
             train_confusion_matrix = calculate_confusion_matrix(out, mask_batch, nc)
@@ -134,17 +133,13 @@ def train(FLAGS):
               'Train Recall: {:.6f}'.format(train_recall.mean().item()))
 
         train_data.append([e, train_loss, train_accuracy, train_miou, train_f1, train_precision.mean().item(), train_recall.mean().item()])
-        """
 
         train_losses.append(train_loss)
-
-        """
         train_accuracies.append(train_accuracy)
         train_miou_scores.append(train_miou)
         train_f1_scores.append(train_f1)
         # train_precisions.append(train_precision.mean().item())
         # train_recalls.append(train_recall.mean().item())
-        """
 
         with torch.no_grad():
             enet.eval()
@@ -156,7 +151,7 @@ def train(FLAGS):
 
                 inputs, labels = inputs.to(device), labels.to(device)
 
-                # inputs = inputs.to(torch.float32) # new code line added to convert inputs to float. Comment this for CE loss
+                inputs = inputs.to(torch.float32) # new code line added to convert inputs to float. Comment this for CE loss
                 out = enet(inputs)
 
                 # labels = labels.to(torch.float32) # new code line added to convert labels to float. Comment this for CE loss                    
@@ -165,7 +160,6 @@ def train(FLAGS):
 
                 eval_loss += loss.item()
 
-                """
                 # Calculate validation performance metrics
                 eval_accuracy = calculate_accuracy(out, labels)
                 eval_confusion_matrix = calculate_confusion_matrix(out, labels, nc)
@@ -180,17 +174,13 @@ def train(FLAGS):
                   'Valid Recall: {:.6f}'.format(eval_recall.mean().item()))
 
             eval_data.append([e, eval_loss, eval_accuracy, eval_miou, eval_f1, eval_precision.mean().item(), eval_recall.mean().item()])
-            """
 
             eval_losses.append(eval_loss)
-
-            """
             eval_accuracies.append(eval_accuracy)
             eval_miou_scores.append(eval_miou)
             eval_f1_scores.append(eval_f1)
             # eval_precisions.append(eval_precision.mean().item())
             # eval_recalls.append(eval_recall.mean().item())
-            """            
 
         if e % save_every == 0:
             checkpoint = {
@@ -200,7 +190,6 @@ def train(FLAGS):
             torch.save(checkpoint, './ckpt-enet-{}-{}.pth'.format(e, train_loss))
             print ('Model saved!')
 
-    """
     # Create DataFrames
     train_df = pd.DataFrame(train_data, columns=['Epoch', 'Train Loss', 'Train Accuracy', 'Train mIoU', 'Train F1 Score', 'Train Precision', 'Train Recall'])
     eval_df = pd.DataFrame(eval_data, columns=['Epoch', 'Valid Loss', 'Valid Accuracy', 'Valid mIoU', 'Valid F1 Score', 'Valid Precision', 'Valid Recall'])
@@ -209,7 +198,6 @@ def train(FLAGS):
     train_df.to_csv('train_metrics.csv', index=False)
     eval_df.to_csv('eval_metrics.csv', index=False)
 
-    """
     # Plotting
     plt.figure(figsize=(12, 8))
 
@@ -222,7 +210,6 @@ def train(FLAGS):
     plt.ylabel('Loss')
     plt.legend()
 
-    """
     # Accuracy plot
     plt.subplot(2, 2, 2)
     plt.plot(range(1, epochs+1), train_accuracies, label='Train Accuracy')
@@ -249,7 +236,6 @@ def train(FLAGS):
     plt.xlabel('Epoch')
     plt.ylabel('F1 Score')
     plt.legend()
-    """
 
     plt.tight_layout()
 
@@ -263,6 +249,7 @@ def train(FLAGS):
     print('[INFO] Total Mean Valid Loss: {:.6f}'.format(sum(eval_losses) / len(eval_losses)))
     print('[INFO] Training Process complete!')
 
+'''
     # Function to save segmentation masks as images
     def save_segmentation_masks(model, dataloader, save_dir, device):
         model.eval()
@@ -282,3 +269,4 @@ def train(FLAGS):
     os.makedirs(output_save_dir, exist_ok=True)
     save_segmentation_masks(enet, eval_pipe, output_save_dir, device)
     print('Segmentation masks saved as images!')
+'''
