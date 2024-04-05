@@ -7,6 +7,8 @@ import torch
 from torchvision.transforms import functional as F
 # from transforms import get_train_transforms, get_eval_transforms
 
+print("Hey, Chris!")
+
 def create_class_mask(img, color_map, is_normalized_img=True, is_normalized_map=False, show_masks=False):
     """
     Function to create C matrices from the segmented image, where each of the C matrices is for one class
