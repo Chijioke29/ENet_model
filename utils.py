@@ -88,7 +88,7 @@ def loader(training_path, segmented_path, batch_size, h=512, w=512):
             img = Image.open(segmented_path + filenames_s[jj])
             img = np.array(img)
             img = cv2.resize(img, (h, w), cv2.INTER_NEAREST)
-            #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # new code line added to convert label to grayscale image
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # new code line added to convert label to grayscale image
             labels.append(img)
          
             """
