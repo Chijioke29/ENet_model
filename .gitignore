@@ -1,0 +1,7 @@
+*.def
+*.sif
+*.png
+*.csv
+/CamVid_dataset
+/CornRowsDataset1
+/GreenHouseDataset
